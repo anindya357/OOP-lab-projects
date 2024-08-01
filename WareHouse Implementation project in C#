@@ -1,0 +1,192 @@
+using System;
+
+
+namespace Program1
+{
+   
+    class Shape
+    {
+        public float[] d = new float[100];
+        public float[] d2 = new float[100];
+        public float[] area = new float[100];
+        public char[] type = new char[100];
+        public int[] shapeid = new int[100];
+        public int shapecount = 0;
+    }
+
+    class Circle : Shape
+    {  public float diameter { get; set; }
+        public int ID { get; set; }
+
+        public Circle(int id, float x)
+        {
+            diameter = x;
+            ID = id;
+        }
+
+        public float Area()
+        {
+            float areac = (float)(Math.PI) * (diameter / 2) * (diameter / 2);
+            return areac;
+        }
+
+        public void shapes(Shape warehouse)
+        {
+            warehouse.d[warehouse.shapecount] = diameter;
+            warehouse.shapeid[warehouse.shapecount] = ID;
+            warehouse.type[warehouse.shapecount] = 'C';
+            warehouse.area[warehouse.shapecount] = Area();
+            warehouse.shapecount++;
+        }
+    }
+
+    class Rectangle : Shape
+    {   public int Id { get; set; }
+        public float Height { get; set; }
+        public float Width { get; set; }
+
+        public Rectangle(int id, float height, float width)
+        {
+            Id = id;
+            Height = height;
+            Width = width;
+        }
+
+        public void shapes(Shape warehouse)
+        {
+            warehouse.d[warehouse.shapecount] = Height;
+            warehouse.d2[warehouse.shapecount] = Width;
+            warehouse.shapeid[warehouse.shapecount] = Id;
+            warehouse.type[warehouse.shapecount] = 'R';
+            warehouse.area[warehouse.shapecount] = Area();
+            warehouse.shapecount++;
+        }
+        public float Area()
+        {
+            return Height * Width;
+        }
+        
+    }
+
+    class AddList
+    {
+        /*private Shape w;
+        public AddList(Shape data)
+        {
+            this.w= data;
+        }*/
+
+        public void display_info(Shape w)
+        {
+            for (int i = 0; i < w.shapecount; i++)
+            {
+                if (w.type[i] == 'C')
+                    Console.WriteLine($"{w.shapeid[i]} Circle {w.d[i]}");
+                else if (w.type[i] == 'R')
+                    Console.WriteLine($"{w.shapeid[i]} Rectangle {w.d[i]} x {w.d2[i]}");
+            }
+        }
+    }
+
+class GetStatistics
+    {
+        private Shape warehouse;
+
+        public GetStatistics(Shape w)
+        {
+            this.warehouse = w;
+        }
+
+        public void DisplayStatistics()
+        {
+            int totalCircles = 0;
+            int totalRectangles = 0;
+            float totalAreaCircles = 0;
+            float totalAreaRectangles = 0;
+
+            for (int i = 0; i < warehouse.shapecount; i++)
+            {
+                if (warehouse.type[i] == 'C')
+                {
+                    totalCircles++;
+                    totalAreaCircles += warehouse.area[i];
+                }
+                else if (warehouse.type[i] == 'R')
+                {
+                    totalRectangles++;
+                    totalAreaRectangles += warehouse.area[i];
+                }
+            }
+
+            float totalArea = totalAreaCircles + totalAreaRectangles;
+
+            Console.WriteLine($"Total shapes: {warehouse.shapecount}");
+            Console.WriteLine($"Total number of Rectangles: {totalRectangles}");
+            Console.WriteLine($"Total number of Circles: {totalCircles}");
+            Console.WriteLine($"Total area: {totalArea:F2}");
+            Console.WriteLine($"The total area occupied by rectangles: {totalAreaRectangles:F2} ({(totalAreaRectangles / totalArea) * 100:F2}%)");
+            Console.WriteLine($"The total area occupied by circles: {totalAreaCircles:F2} ({(totalAreaCircles / totalArea) * 100:F2}%)");
+        }
+    }
+
+    class WareHouse
+    {
+        static void Main(string[] args)
+        {
+            Shape warehouse = new Shape();
+            int id = 1;
+
+            while (true)
+            {
+                Console.WriteLine("\nMenu:");
+                Console.WriteLine("1. Add a Circle:");
+                Console.WriteLine("2. Add a Rectangle:");
+                Console.WriteLine("3. List Items:");
+                Console.WriteLine("4. Get Statistics:");
+                Console.WriteLine("5. Exit:");
+                Console.WriteLine("Enter an Option:");
+                int key = int.Parse(Console.ReadLine());
+
+                if (key == 1)
+                {
+                    Console.WriteLine("Enter Diameter:");
+                    float d = float.Parse(Console.ReadLine());
+                    Circle circ = new Circle(id, d);
+                    circ.shapes(warehouse);
+                    id++;
+                }
+                else if (key == 2)
+                {
+                    Console.WriteLine("Enter height:");
+                    float h = float.Parse(Console.ReadLine());
+                    Console.WriteLine("Enter Width:");
+                    float w = float.Parse(Console.ReadLine());
+                    Rectangle rect = new Rectangle(id, h, w);
+                    rect.shapes(warehouse);
+                    id++;
+                }
+                else if (key == 3)
+                {
+                    Console.WriteLine("ID Type Dimension");
+                    AddList shapes = new AddList();
+                    shapes.display_info(warehouse);
+                }
+                else if (key == 4)
+                {
+                    GetStatistics stats = new GetStatistics(warehouse);
+                    stats.DisplayStatistics();
+                }
+                else if (key == 5)
+                {
+                    Console.WriteLine("Exiting program...");
+                    break;  
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
+                }
+            }
+        }
+    }
+}    
+
